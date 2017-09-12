@@ -1,18 +1,22 @@
-$("button").click(function(){
-	if(this.innerText === 'POST'){
-		var grandParent = this.parentNode.parentNode;
-		var title = $(grandParent).find("input[name='title']").val();
-		var date = $(grandParent).find("input[name='date']").val();
-		var author = $(grandParent).find("input[name='author']").val();
-		var tags = ($(grandParent).find("input[name='tags']").val()).split(',');
-		var content = $(grandParent).find("textarea").val();
-		document.posts.addPost(title,date,author,tags,content);
-		post();
-	}
+$("#btnPost").click(function(event){
+	
+	event.preventDefault();
+	var grandParent = this.parentNode.parentNode;
+	var title = $(grandParent).find("input[name='title']").val();
+	var date = $(grandParent).find("input[name='date']").val();
+	var author = $(grandParent).find("input[name='author']").val();
+	var tags = ($(grandParent).find("input[name='tags']").val()).split(',');
+	var content = $(grandParent).find("textarea").val();
+	document.posts.addPost(title,date,author,tags,content);
+	post();
 });
 
 function post(){
+	$("#posts").innerHtml = '';
 	var posts = document.posts.getPosts();
+	posts.sort(compareDate);
+	var container = document.createElement('div');
+	container.class = 'col-lg-8 col-md-10 mx-auto';
 	for(var i =0;i<posts.length;i++){
 		var div = document.createElement('div');
 		div.class='post-preview';
@@ -51,8 +55,22 @@ function post(){
 		// 			+'<h3 class="post-subtitle">'+ posts[i].content+'</h3></a>'
 		// 			+'<p class="post-meta">Posted by <a href="#">'+posts[i].author +'</a> on '+ parseDate(posts[i].date)+'</p>'
 		// 			+'<p class="post-meta">Tags: '+ '</p></div> ';
-		$("#posts").append(div);
+		container.appendChild(div);
 	}
+	$('#posts').append(container);
+}
+
+function compareDate(date1,date2){
+	var d1 = new Date(date1);
+	var d2 = new Date(date2);
+
+	if(d1.getTime() < d2.getTime()){
+		return -1;
+	} else if (d1.getTime() > d2.getTime()){
+		return 1;
+	}
+
+	return 0;
 }
 
 function parseDate(dateValue){

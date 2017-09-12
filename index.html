@@ -70,8 +70,8 @@
 
     <!-- Main Content -->
     <div class="container">
-      <div class="row">
-        <div class="col-lg-8 col-md-10 mx-auto" id="posts">
+      <div class="row" id="posts">
+        <!-- <div class="col-lg-8 col-md-10 mx-auto"> -->
           <!-- <div class="post-preview">
             <a href="post.html">
               <h2 class="post-title">
@@ -91,7 +91,7 @@
           <!-- <div class="clearfix">
             <a class="btn btn-secondary float-right" href="#">Older Posts &rarr;</a>
           </div> -->
-        </div>
+        <!-- </div> -->
       </div>
     </div>
 
@@ -137,7 +137,7 @@
     <!-- Modal-->
       <div id="myModal" class="modal fade" role="dialog">
         <div class="modal-dialog modal-lg">
-
+        <form method="post">
           <!-- Modal content-->
           <div class="modal-content">
             <div class="modal-header">
@@ -158,11 +158,11 @@
               
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-default" data-dismiss="modal">Post</button>
+              <input type="submit" id="btnPost"class="btn btn-default" data-dismiss="modal" value="Post"></button>
               <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
             </div>
           </div>
-
+          </form>
         </div>
       </div>
 

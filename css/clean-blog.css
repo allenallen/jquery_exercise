@@ -357,3 +357,8 @@ footer {
   width: 750px;
   margin: auto;
 }
+.post-btn {
+  border-radius: 40px;
+  font-size: 1em;
+  margin-top: 40px;
+}

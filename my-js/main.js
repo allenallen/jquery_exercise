@@ -12,9 +12,10 @@ $("#btnPost").click(function(event){
 });
 
 function post(){
-	$("#posts").innerHtml = '';
+	$("#posts").empty();
 	var posts = document.posts.getPosts();
 	posts.sort(compareDate);
+	posts.reverse();
 	var container = document.createElement('div');
 	container.class = 'col-lg-8 col-md-10 mx-auto';
 	for(var i =0;i<posts.length;i++){
@@ -22,7 +23,10 @@ function post(){
 		div.class='post-preview';
 
 		var postLink = document.createElement('a');
-		postLink.href = 'post.html';
+		postLink.href = '#postModal';
+		$(postLink).click(function(){
+			$('#postModal').find('#post-title').innerText = posts[i].title;
+		})
 
 		var title = document.createElement('h2');
 		title.class='post-title';
@@ -60,10 +64,9 @@ function post(){
 	$('#posts').append(container);
 }
 
-function compareDate(date1,date2){
-	var d1 = new Date(date1);
-	var d2 = new Date(date2);
-
+function compareDate(obj1,obj2){
+	var d1 = new Date(obj1.date);
+	var d2 = new Date(obj2.date);
 	if(d1.getTime() < d2.getTime()){
 		return -1;
 	} else if (d1.getTime() > d2.getTime()){

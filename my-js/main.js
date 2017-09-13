@@ -8,7 +8,13 @@ $("#btnPost").click(function(event){
 	var tags = ($(grandParent).find("input[name='tags']").val()).split(',');
 	var content = $(grandParent).find("textarea").val();
 	document.posts.addPost(title,date,author,tags,content);
+	document.tags.addTag(tags);
 	post();
+});
+
+$("#search-with-tags").submit(function(event){
+	event.preventDefault();
+	alert(document.tags.getTags());
 });
 
 function post(){
@@ -54,11 +60,6 @@ function post(){
 		div.appendChild(postLink);
 		div.appendChild(meta);
 		div.appendChild(tags);
-		// var post = '<div class="post-preview"><a href="post.html"><h2 class="post-title">'
-		// 			+ posts[i].title +'</h2>'
-		// 			+'<h3 class="post-subtitle">'+ posts[i].content+'</h3></a>'
-		// 			+'<p class="post-meta">Posted by <a href="#">'+posts[i].author +'</a> on '+ parseDate(posts[i].date)+'</p>'
-		// 			+'<p class="post-meta">Tags: '+ '</p></div> ';
 		container.appendChild(div);
 	}
 	$('#posts').append(container);
@@ -93,6 +94,10 @@ function Posts(){
 	this.post = [];
 }
 
+function Tags(){
+	this.tags = [];
+}
+
 Posts.prototype.addPost = function(title,date,author,tags,content){
 	var postItem = {'title':title,'date':date,'content':content,'author':author,'tags':tags};
 	this.post.push(postItem);
@@ -102,4 +107,70 @@ Posts.prototype.getPosts = function(){
 	return this.post;
 }
 
+Tags.prototype.addTag = function(tags){
+	var tagArray = flattenArray(tags,this.tags);
+	this.tags = tagArray;
+}
+
+Tags.prototype.getTags = function(){
+	return this.tags;
+}
+
 document.posts = new Posts();
+document.tags = new Tags();
+
+function flattenArray(x,resultingArray){
+	var result = resultingArray;
+	
+	for(var i=0;i<x.length;i++){
+		if(x[i] instanceof Array){
+			flattenArray(x[i], result);
+		}
+		else{
+			result.push(x[i]);
+		}
+	}
+	return result;
+}
+
+// $('input.typeahead').typeahead({
+//       source:  function (query, process) {
+//         return $.get(document.tags.getTags(), { query: query }, function (data) {
+//             console.log(data);
+//             data = $.parseJSON(data);
+//               return process(data);
+//           });
+//       }
+//       });
+$('#search-tags-input').typeahead({
+	hint:true,
+	highlight:true,
+	minLength:1
+},
+{
+	name:'tags',
+	source:substringMatcher(document.tags.getTags())
+});
+
+function substringMatcher(strs) {
+	alert('tags');
+  return function findMatches(q, cb) {
+    var matches, substringRegex;
+
+    // an array that will be populated with substring matches
+    matches = [];
+
+    // regex used to determine if a string contains the substring `q`
+    substrRegex = new RegExp(q, 'i');
+
+    // iterate through the pool of strings and for any string that
+    // contains the substring `q`, add it to the `matches` array
+    $.each(strs, function(i, str) {
+      if (substrRegex.test(str)) {
+        matches.push(str);
+      }
+    });
+
+    cb(matches);
+  };
+};

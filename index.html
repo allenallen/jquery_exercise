@@ -33,7 +33,7 @@
           Menu
           <i class="fa fa-bars"></i>
         </button>
-        <div class="collapse navbar-collapse" id="navbarResponsive">
+        <!-- <div class="collapse navbar-collapse" id="navbarResponsive">
           <ul class="navbar-nav ml-auto">
             <li class="nav-item">
               <a class="nav-link" href="index.html">Home</a>
@@ -48,7 +48,7 @@
               <a class="nav-link" href="contact.html">Contact</a>
             </li>
           </ul>
-        </div>
+        </div> -->
       </div>
     </nav>
 
@@ -61,6 +61,10 @@
               <h1>Welcome to My Blog</h1>
               <span class="subheading">
                 <button type="button" class="btn btn-secondary btn-lg post-btn" data-toggle="modal" data-target="#myModal">Write new Post</button> 
+                <form class="search-control" method="post" id="search-with-tags">
+                  <input class="typeahead form-control btn-secondary" style="margin:0px auto;width:300px;" type="text" id="search-tags-input">
+                  <button type="submit"/>
+                </form>
               </span>
             </div>
           </div>
@@ -178,12 +182,16 @@
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/popper/popper.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-3-typeahead/4.0.2/bootstrap3-typeahead.min.js"/>
 
     <!-- Custom scripts for this template -->
     <script src="js/clean-blog.min.js"></script>
 
     <!-- My main js file-->
     <script type="text/javascript" src="my-js/main.js">
+    </script>
+    <script type="text/javascript">
+      
     </script>
   </body>
 

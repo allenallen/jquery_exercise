@@ -12,10 +12,100 @@ $("#btnPost").click(function(event){
 	post();
 });
 
-$("#search-with-tags").submit(function(event){
+$("#submit-search").click(function(event){
 	event.preventDefault();
-	alert(document.tags.getTags());
+	var tag = $('#search-tags-input').val();
+	viewPostByTag(tag);
 });
+
+var substringMatcher = function(strs) {
+  return function findMatches(q, cb) {
+    var matches, substringRegex;
+
+    // an array that will be populated with substring matches
+    matches = [];
+
+    // regex used to determine if a string contains the substring `q`
+    substrRegex = new RegExp(q, 'i');
+    alert('substrRegex ' + substrRegex);
+    // iterate through the pool of strings and for any string that
+    // contains the substring `q`, add it to the `matches` array
+    $.each(strs, function(i, str) {
+      if (substrRegex.test(str)) {
+        matches.push(str);
+      }
+    });
+    alert('matches ' + matches);
+    cb(matches);
+  };
+};
+
+function isTagFound(tag,tagArray){
+	for(var i=0;i<tagArray.length;i++){
+		if(tagArray[i] === tag)
+			return true;
+	}
+	return false;
+}
+
+function viewPostByTag(tag){
+	$("#posts").empty();
+	var posts = document.posts.getPosts();
+	var filteredPost = [];
+	if(tag === ""){
+		filteredPost = posts;
+	} else {
+		for(var i=0;i<posts.length;i++){
+			if(isTagFound(tag,posts[i].tags))
+				filteredPost.push(posts[i]);
+		}
+	}
+	
+	filteredPost.sort(compareDate);
+	filteredPost.reverse();
+
+	var container = document.createElement('div');
+	container.class = 'col-lg-8 col-md-10 mx-auto';
+	for(var i =0;i<filteredPost.length;i++){
+		var div = document.createElement('div');
+		div.class='post-preview';
+
+		var postLink = document.createElement('a');
+		postLink.href = '#postModal';
+		$(postLink).click(function(){
+			$('#postModal').find('#post-title').innerText = filteredPost[i].title;
+		})
+
+		var title = document.createElement('h2');
+		title.class='post-title';
+		title.innerText = filteredPost[i].title;
+
+		var content = document.createElement('h3');
+		content.class='post-subtitle';
+		content.innerText = filteredPost[i].content;
+
+		var meta = document.createElement('p');
+		meta.class="post-meta";
+		meta.innerText = "Posted by " + filteredPost[i].author + " on " +  parseDate(filteredPost[i].date);
+
+		var tags = document.createElement('p');
+		tags.class="post-meta";
+		var tagsStrings = "";
+		for(var j=0;j<filteredPost[i].tags.length;j++){
+			tagsStrings += filteredPost[i].tags[j] + " ";
+		}
+		tags.innerText = "Tags: " + tagsStrings;
+
+		postLink.appendChild(title);
+		postLink.appendChild(content);
+		
+		div.appendChild(postLink);
+		div.appendChild(meta);
+		div.appendChild(tags);
+		container.appendChild(div);
+	}
+	$('#posts').append(container);
+}
 
 function post(){
 	$("#posts").empty();
@@ -143,34 +233,6 @@ function flattenArray(x,resultingArray){
 //       }
 //       });
 $('#search-tags-input').typeahead({
-	hint:true,
-	highlight:true,
+	source:document.tags.getTags(),
 	minLength:1
-},
-{
-	name:'tags',
-	source:substringMatcher(document.tags.getTags())
 });
-
-function substringMatcher(strs) {
-	alert('tags');
-  return function findMatches(q, cb) {
-    var matches, substringRegex;
-
-    // an array that will be populated with substring matches
-    matches = [];
-
-    // regex used to determine if a string contains the substring `q`
-    substrRegex = new RegExp(q, 'i');
-
-    // iterate through the pool of strings and for any string that
-    // contains the substring `q`, add it to the `matches` array
-    $.each(strs, function(i, str) {
-      if (substrRegex.test(str)) {
-        matches.push(str);
-      }
-    });
-
-    cb(matches);
-  };
-};
